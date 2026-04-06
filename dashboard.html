@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Airline Support Ticket Analyzer</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%);
+      border-bottom: 1px solid #1e40af44;
+      padding: 2rem 2.5rem;
+    }
+    header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      color: #94a3b8;
+      margin-top: 0.25rem;
+      font-size: 0.9rem;
+    }
+    .header-badge {
+      display: inline-block;
+      background: #1e40af;
+      color: #bfdbfe;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    main { padding: 2rem 2.5rem; max-width: 1400px; margin: 0 auto; }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .kpi-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+    }
+    .kpi-card .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.4rem;
+    }
+    .kpi-card .value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      line-height: 1;
+    }
+    .kpi-card .sub {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 0.35rem;
+    }
+    .kpi-card.accent-green { border-color: #16a34a55; }
+    .kpi-card.accent-green .value { color: #4ade80; }
+    .kpi-card.accent-blue { border-color: #2563eb55; }
+    .kpi-card.accent-blue .value { color: #60a5fa; }
+    .kpi-card.accent-amber { border-color: #d9770655; }
+    .kpi-card.accent-amber .value { color: #fbbf24; }
+
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+
+    .chart-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-card h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 1rem;
+    }
+    .chart-container { position: relative; height: 240px; }
+
+    .chart-card.wide {
+      grid-column: 1 / -1;
+    }
+
+    .table-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+    .table-card h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 1.25rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+    thead th {
+      text-align: left;
+      padding: 0.6rem 0.75rem;
+      color: #94a3b8;
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid #334155;
+    }
+    tbody tr {
+      border-bottom: 1px solid #1e293b;
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: #263248; }
+    tbody td {
+      padding: 0.75rem 0.75rem;
+      vertical-align: top;
+      color: #cbd5e1;
+    }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; color: #e2e8f0; }
+    td.center { text-align: center; }
+    td.savings { color: #4ade80; font-weight: 600; }
+    td.rationale { color: #94a3b8; font-size: 0.8rem; max-width: 320px; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+    .badge-high   { background: #14532d; color: #86efac; }
+    .badge-medium { background: #78350f; color: #fcd34d; }
+    .badge-low    { background: #7f1d1d; color: #fca5a5; }
+
+    footer {
+      text-align: center;
+      color: #475569;
+      font-size: 0.75rem;
+      padding: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">Internal Analytics</div>
+  <h1>✈ Airline Support Ticket Analyzer</h1>
+  <p>AI deflection opportunity analysis &amp; cost savings estimation &mdash; 100 tickets analyzed</p>
+</header>
+
+<main>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="label">Total Tickets</div>
+      <div class="value">100</div>
+      <div class="sub">Across all categories</div>
+    </div>
+    <div class="kpi-card accent-green">
+      <div class="label">Est. AI Cost Savings</div>
+      <div class="value">$687</div>
+      <div class="sub">Based on $15/ticket human cost</div>
+    </div>
+    <div class="kpi-card accent-blue">
+      <div class="label">Deflectable Tickets</div>
+      <div class="value">69</div>
+      <div class="sub">High + medium deflection categories</div>
+    </div>
+    <div class="kpi-card accent-amber">
+      <div class="label">Deflection Rate</div>
+      <div class="value">69%</div>
+      <div class="sub">Of total volume is automatable</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+
+    <div class="chart-card">
+      <h2>Ticket Volume by Category</h2>
+      <div class="chart-container">
+        <canvas id="volumeChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>First Contact Resolution Rate (%)</h2>
+      <div class="chart-container">
+        <canvas id="fcrChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Average Resolution Time (Hours)</h2>
+      <div class="chart-container">
+        <canvas id="resolutionChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h2>Estimated AI Savings by Category ($)</h2>
+      <div class="chart-container">
+        <canvas id="savingsChart"></canvas>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="table-card">
+    <h2>Full Category Breakdown</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th style="text-align:right">Volume</th>
+          <th style="text-align:right">Avg Resolution</th>
+          <th style="text-align:right">FCR Rate</th>
+          <th style="text-align:center">AI Deflection</th>
+          <th style="text-align:right">Est. Savings</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Flight Delay</strong></td>
+          <td class="num">29</td>
+          <td class="num">11.5h</td>
+          <td class="num">58.6%</td>
+          <td class="center"><span class="badge badge-medium">MEDIUM</span></td>
+          <td class="num savings">$218</td>
+          <td class="rationale">Status updates and compensation eligibility can be fully automated.</td>
+        </tr>
+        <tr>
+          <td><strong>Lost Baggage</strong></td>
+          <td class="num">18</td>
+          <td class="num">80.8h</td>
+          <td class="num">27.8%</td>
+          <td class="center"><span class="badge badge-low">LOW</span></td>
+          <td class="num savings">$54</td>
+          <td class="rationale">High emotional stakes and physical coordination make full automation difficult.</td>
+        </tr>
+        <tr>
+          <td><strong>Seat Issue</strong></td>
+          <td class="num">15</td>
+          <td class="num">7.1h</td>
+          <td class="num">40.0%</td>
+          <td class="center"><span class="badge badge-medium">MEDIUM</span></td>
+          <td class="num savings">$112</td>
+          <td class="rationale">Seat changes and refund triggers can be automated; some cases need agent review.</td>
+        </tr>
+        <tr>
+          <td><strong>Refund Request</strong></td>
+          <td class="num">13</td>
+          <td class="num">379.6h</td>
+          <td class="num">53.8%</td>
+          <td class="center"><span class="badge badge-low">LOW</span></td>
+          <td class="num savings">$39</td>
+          <td class="rationale">Policy-based, but complex edge cases and disputes require human judgment.</td>
+        </tr>
+        <tr>
+          <td><strong>Check-In Problem</strong></td>
+          <td class="num">9</td>
+          <td class="num">3.3h</td>
+          <td class="num">66.7%</td>
+          <td class="center"><span class="badge badge-high">HIGH</span></td>
+          <td class="num savings">$108</td>
+          <td class="rationale">Most issues are procedural and resolvable via automated guidance or self-service.</td>
+        </tr>
+        <tr>
+          <td><strong>App Issue</strong></td>
+          <td class="num">8</td>
+          <td class="num">3.4h</td>
+          <td class="num">50.0%</td>
+          <td class="center"><span class="badge badge-high">HIGH</span></td>
+          <td class="num savings">$96</td>
+          <td class="rationale">Highly automatable — mostly troubleshooting steps, FAQs, and self-service fixes.</td>
+        </tr>
+        <tr>
+          <td><strong>Cancellation</strong></td>
+          <td class="num">8</td>
+          <td class="num">36.0h</td>
+          <td class="num">25.0%</td>
+          <td class="center"><span class="badge badge-medium">MEDIUM</span></td>
+          <td class="num savings">$60</td>
+          <td class="rationale">Rebooking and refund processing can be partially automated, with escalation paths.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>Generated by analyze.py &mdash; Data: tickets.csv &mdash; Cost assumption: $15 per human-handled ticket</footer>
+
+<script>
+const DATA = {"categories": ["app issue", "cancellation", "check-in problem", "flight delay", "lost baggage", "refund request", "seat issue"], "volumes": [8, 8, 9, 29, 18, 13, 15], "avg_resolution": [3.4, 36.0, 3.3, 11.5, 80.8, 379.6, 7.1], "fcr": [50.0, 25.0, 66.7, 58.6, 27.8, 53.8, 40.0], "deflection_colors": ["#22c55e", "#f59e0b", "#22c55e", "#f59e0b", "#ef4444", "#ef4444", "#f59e0b"], "savings": [96.0, 60.0, 108.0, 217.5, 54.0, 39.0, 112.5]};
+
+const FONT = { family: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif", size: 12 };
+const GRID_COLOR = "rgba(148,163,184,0.1)";
+const TICK_COLOR = "#64748b";
+
+Chart.defaults.color = TICK_COLOR;
+Chart.defaults.font = FONT;
+
+function baseBarOptions(indexAxis) {
+  return {
+    indexAxis: indexAxis || "x",
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: {} } },
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR } },
+      y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR } },
+    },
+  };
+}
+
+// Volume chart
+new Chart(document.getElementById("volumeChart"), {
+  type: "bar",
+  data: {
+    labels: DATA.categories.map(c => c.split(" ").map(w => w[0].toUpperCase()+w.slice(1)).join(" ")),
+    datasets: [{
+      data: DATA.volumes,
+      backgroundColor: "#3b82f6cc",
+      borderColor: "#3b82f6",
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...baseBarOptions(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw} tickets` } } },
+  },
+});
+
+// FCR chart
+new Chart(document.getElementById("fcrChart"), {
+  type: "bar",
+  data: {
+    labels: DATA.categories.map(c => c.split(" ").map(w => w[0].toUpperCase()+w.slice(1)).join(" ")),
+    datasets: [{
+      data: DATA.fcr,
+      backgroundColor: DATA.deflection_colors.map(c => c + "cc"),
+      borderColor: DATA.deflection_colors,
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...baseBarOptions(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}%` } } },
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR } },
+      y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, callback: v => v + "%" }, max: 100 },
+    },
+  },
+});
+
+// Resolution time chart
+new Chart(document.getElementById("resolutionChart"), {
+  type: "bar",
+  data: {
+    labels: DATA.categories.map(c => c.split(" ").map(w => w[0].toUpperCase()+w.slice(1)).join(" ")),
+    datasets: [{
+      data: DATA.avg_resolution,
+      backgroundColor: "#8b5cf6cc",
+      borderColor: "#8b5cf6",
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...baseBarOptions(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw}h` } } },
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR } },
+      y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, callback: v => v + "h" } },
+    },
+  },
+});
+
+// Savings chart
+new Chart(document.getElementById("savingsChart"), {
+  type: "bar",
+  data: {
+    labels: DATA.categories.map(c => c.split(" ").map(w => w[0].toUpperCase()+w.slice(1)).join(" ")),
+    datasets: [{
+      data: DATA.savings,
+      backgroundColor: "#22c55ecc",
+      borderColor: "#22c55e",
+      borderWidth: 1,
+      borderRadius: 4,
+    }]
+  },
+  options: {
+    ...baseBarOptions(),
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` $${ctx.raw.toLocaleString()}` } } },
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR } },
+      y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR, callback: v => "$" + v } },
+    },
+  },
+});
+</script>
+</body>
+</html>

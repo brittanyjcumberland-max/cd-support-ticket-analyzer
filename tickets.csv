@@ -1,0 +1,101 @@
+ticket_id,category,description,resolution_time_hours,was_resolved_first_contact
+TKT-1000,seat issue,I paid $65 extra for an aisle seat and was moved to a middle seat with zero notice or refund. I want my money back.,8.5,yes
+TKT-1001,lost baggage,Still waiting for my bag from my flight 6 days ago. The tracking system just says 'in transit.' I've been buying clothes every day.,93.1,no
+TKT-1002,flight delay,Delayed 6 hours due to 'mechanical issues.' We were never given food vouchers even though the delay was the airline's fault.,3.6,yes
+TKT-1003,flight delay,Flight from Denver to Seattle delayed almost 5 hours. Weather was clear. Still not clear why this happened and no one explained.,1.1,no
+TKT-1004,refund request,Used travel credit that was about to expire. Flight was then cancelled by airline. Now being told original credit can't be refunded.,700.4,no
+TKT-1005,refund request,"Asked for refund to original payment method, got a voucher instead. I didn't ask for a voucher. Please fix this.",659.2,no
+TKT-1006,app issue,Apple Wallet integration is broken. My boarding pass won't save. Have to screenshot everything like it's 2012.,6.8,yes
+TKT-1007,lost baggage,My bag arrived but the handle is completely broken and there's a big scratch across the side. This was a brand new Samsonite bag.,28.5,no
+TKT-1008,cancellation,My flight was cancelled 30 minutes before boarding and they rebooked me on a flight that's 2 days later. That does NOT work for me.,43.9,no
+TKT-1009,lost baggage,Flew in from London Heathrow yesterday and my suitcase is completely missing. Filed a report at the counter but no one has called me back.,112.3,no
+TKT-1010,flight delay,Gate agent told us 20 min delay. Then 40. Then 2 hours. Then just... nothing. Had to figure out a hotel on my own last minute.,6.5,yes
+TKT-1011,cancellation,Flight cancelled due to 'operational reasons' — whatever that means. I've been on hold for 2 hours trying to get a refund.,8.0,no
+TKT-1012,lost baggage,Flew in from London Heathrow yesterday and my suitcase is completely missing. Filed a report at the counter but no one has called me back.,117.6,no
+TKT-1013,flight delay,Flight delayed AGAIN. This is the third time in two months on this route. I'm a Gold member and this is how you treat loyal customers?,4.0,yes
+TKT-1014,seat issue,Family of 4 separated across plane on an international flight. Kids ages 6 and 9. Staff were unhelpful and rude about it.,2.8,yes
+TKT-1015,cancellation,"Cancelled flight, got rebooked automatically but the new flight has a 9-hour layover. Not acceptable. Need a direct flight.",69.5,no
+TKT-1016,flight delay,Short 45 minute delay but it caused a ripple effect on my whole day. Missed my medical appointment. Please advise on compensation.,16.9,no
+TKT-1017,seat issue,"Paid for extra legroom seat and when I got on the plane, there was a wall in front of it. Not extra legroom at all.",11.9,yes
+TKT-1018,refund request,Canceled due to medical emergency with documentation. Being told the ticket is non-refundable anyway. That can't be right.,650.1,no
+TKT-1019,lost baggage,My bag arrived but the handle is completely broken and there's a big scratch across the side. This was a brand new Samsonite bag.,36.3,no
+TKT-1020,refund request,"Asked for refund to original payment method, got a voucher instead. I didn't ask for a voucher. Please fix this.",184.2,yes
+TKT-1021,refund request,Waiting 8 weeks for a refund on a cancelled flight. Keep getting told 'it's being processed.' This is now a dispute with my credit card.,516.7,yes
+TKT-1022,flight delay,3 hour delay with zero communication. We sat on the tarmac and nobody told us anything. The wifi didn't even work to look things up.,21.8,no
+TKT-1023,lost baggage,Flew in from London Heathrow yesterday and my suitcase is completely missing. Filed a report at the counter but no one has called me back.,67.5,no
+TKT-1024,check-in problem,"Checked in, printed boarding pass, but the barcode wouldn't scan at security. Had to get a replacement and almost missed my connection.",1.7,yes
+TKT-1025,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,14.3,yes
+TKT-1026,lost baggage,My bag was delivered to the wrong address by your courier. Someone else's address was on the delivery slip. How does that even happen?,99.2,yes
+TKT-1027,lost baggage,Flew in from London Heathrow yesterday and my suitcase is completely missing. Filed a report at the counter but no one has called me back.,83.2,no
+TKT-1028,app issue,App showed my gate as B12. I went to B12 and the flight was gone. Gate had changed and app never updated.,4.0,no
+TKT-1029,seat issue,The seat in front of me was completely broken and kept falling back into my lap the entire 8-hour flight.,1.7,no
+TKT-1030,refund request,Waiting 8 weeks for a refund on a cancelled flight. Keep getting told 'it's being processed.' This is now a dispute with my credit card.,197.1,yes
+TKT-1031,refund request,Canceled due to medical emergency with documentation. Being told the ticket is non-refundable anyway. That can't be right.,121.6,yes
+TKT-1032,cancellation,Flight was cancelled but the website is still showing it as 'on time.' Your systems are completely broken.,19.5,no
+TKT-1033,check-in problem,"Checked in, printed boarding pass, but the barcode wouldn't scan at security. Had to get a replacement and almost missed my connection.",4.9,no
+TKT-1034,flight delay,3 hour delay with zero communication. We sat on the tarmac and nobody told us anything. The wifi didn't even work to look things up.,2.2,no
+TKT-1035,seat issue,I paid $65 extra for an aisle seat and was moved to a middle seat with zero notice or refund. I want my money back.,11.7,no
+TKT-1036,app issue,The app shows my flight is delayed but the airport board shows on time. Which one is correct?? Very confusing.,1.7,yes
+TKT-1037,seat issue,My seat's armrest is broken. Tray table was also stuck. The seat light didn't work. I paid for business and got economy-level experience.,10.5,no
+TKT-1038,app issue,Tried to upgrade my seat through the app and it charged my card twice. Two separate $89 charges.,3.3,no
+TKT-1039,seat issue,Assigned exit row but at the gate they gave it to someone else. I'm 6'4 and specifically need that extra legroom.,11.2,no
+TKT-1040,refund request,Used travel credit that was about to expire. Flight was then cancelled by airline. Now being told original credit can't be refunded.,318.4,no
+TKT-1041,lost baggage,Still waiting for my bag from my flight 6 days ago. The tracking system just says 'in transit.' I've been buying clothes every day.,83.5,no
+TKT-1042,flight delay,2.5 hour delay caused me to miss my daughter's graduation ceremony. I want to know what compensation I'm entitled to.,7.8,no
+TKT-1043,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,17.9,yes
+TKT-1044,lost baggage,Lost bag on flight AA203. Tag number is still attached. I've called 3 times and keep getting transferred. This is insane.,18.2,no
+TKT-1045,flight delay,I understand delays happen but the COMPLETE lack of updates is infuriating. Not one announcement for 3 hours. This is unacceptable.,22.1,yes
+TKT-1046,lost baggage,My bag never showed up on the carousel at JFK. Waited 2 hours. Nobody helped me. I had important medication in that bag!!,115.8,yes
+TKT-1047,flight delay,Flight delayed AGAIN. This is the third time in two months on this route. I'm a Gold member and this is how you treat loyal customers?,2.6,yes
+TKT-1048,seat issue,My seat's armrest is broken. Tray table was also stuck. The seat light didn't work. I paid for business and got economy-level experience.,5.4,no
+TKT-1049,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,6.7,no
+TKT-1050,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,2.9,no
+TKT-1051,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,13.0,no
+TKT-1052,flight delay,2.5 hour delay caused me to miss my daughter's graduation ceremony. I want to know what compensation I'm entitled to.,16.4,yes
+TKT-1053,check-in problem,Tried to check in online but TSA PreCheck wasn't showing up on my boarding pass. This happens every single time.,2.7,yes
+TKT-1054,seat issue,Assigned exit row but at the gate they gave it to someone else. I'm 6'4 and specifically need that extra legroom.,6.0,no
+TKT-1055,seat issue,The seat in front of me was completely broken and kept falling back into my lap the entire 8-hour flight.,1.1,yes
+TKT-1056,lost baggage,Bag came back with broken zipper and my laptop inside is now damaged. I want to know what you're going to do about this.,119.6,yes
+TKT-1057,refund request,I was denied boarding because of an overbooking situation and now getting told the refund takes 60-90 days. That's ridiculous.,376.1,yes
+TKT-1058,lost baggage,Lost bag on flight AA203. Tag number is still attached. I've called 3 times and keep getting transferred. This is insane.,107.1,no
+TKT-1059,flight delay,Delayed 6 hours due to 'mechanical issues.' We were never given food vouchers even though the delay was the airline's fault.,7.6,yes
+TKT-1060,check-in problem,Mobile check-in not working for group bookings. Had to check in separately for each member which split up our seats.,4.4,yes
+TKT-1061,seat issue,Family of 4 separated across plane on an international flight. Kids ages 6 and 9. Staff were unhelpful and rude about it.,1.1,no
+TKT-1062,seat issue,Assigned exit row but at the gate they gave it to someone else. I'm 6'4 and specifically need that extra legroom.,11.2,yes
+TKT-1063,refund request,The refund I received was $214 less than what I paid. No explanation of the difference. Please explain or refund the rest.,208.1,no
+TKT-1064,app issue,The in-app chat support connected me to a bot that couldn't understand anything I said. Completely useless.,1.7,yes
+TKT-1065,refund request,I was denied boarding because of an overbooking situation and now getting told the refund takes 60-90 days. That's ridiculous.,523.5,yes
+TKT-1066,flight delay,Delay pushed my arrival past midnight and there were no more connecting options. Slept in the airport. Zero assistance offered.,20.6,yes
+TKT-1067,lost baggage,Both of my checked bags are missing after my connecting flight through Chicago. The agent at the desk just shrugged and gave me a form.,109.8,no
+TKT-1068,flight delay,3 hour delay with zero communication. We sat on the tarmac and nobody told us anything. The wifi didn't even work to look things up.,15.6,no
+TKT-1069,flight delay,My flight was delayed 4 hours and I missed my connecting flight to Rome. Now I'm stuck in Frankfurt with no hotel and no help from gate staff.,1.1,no
+TKT-1070,flight delay,Delay pushed my arrival past midnight and there were no more connecting options. Slept in the airport. Zero assistance offered.,23.5,yes
+TKT-1071,check-in problem,"Checked in, printed boarding pass, but the barcode wouldn't scan at security. Had to get a replacement and almost missed my connection.",3.5,yes
+TKT-1072,app issue,The app keeps crashing when I try to check in for my flight tomorrow. I've reinstalled it twice already.,1.3,no
+TKT-1073,flight delay,Short 45 minute delay but it caused a ripple effect on my whole day. Missed my medical appointment. Please advise on compensation.,21.8,yes
+TKT-1074,refund request,Bought trip insurance but the claim process on your website is completely broken. Submit button does nothing.,429.4,yes
+TKT-1075,flight delay,Flight delayed AGAIN. This is the third time in two months on this route. I'm a Gold member and this is how you treat loyal customers?,2.0,yes
+TKT-1076,check-in problem,Online check-in closed 45 minutes before it said it would. Had to pay $35 bag drop fee at the airport that I shouldn't have had to.,5.4,yes
+TKT-1077,cancellation,Got a text cancellation at midnight. I was already at the airport hotel. The rebooking options are all terrible.,48.7,no
+TKT-1078,flight delay,I understand delays happen but the COMPLETE lack of updates is infuriating. Not one announcement for 3 hours. This is unacceptable.,21.3,yes
+TKT-1079,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,18.2,no
+TKT-1080,seat issue,My seat's armrest is broken. Tray table was also stuck. The seat light didn't work. I paid for business and got economy-level experience.,10.5,no
+TKT-1081,flight delay,Flight delayed AGAIN. This is the third time in two months on this route. I'm a Gold member and this is how you treat loyal customers?,21.3,yes
+TKT-1082,seat issue,The person next to me was extremely ill and coughing the entire 7-hour flight. Crew refused to reseat me even when I asked nicely.,9.6,yes
+TKT-1083,app issue,The app shows my flight is delayed but the airport board shows on time. Which one is correct?? Very confusing.,2.5,no
+TKT-1084,flight delay,3 hour delay with zero communication. We sat on the tarmac and nobody told us anything. The wifi didn't even work to look things up.,9.8,yes
+TKT-1085,flight delay,Flight from Denver to Seattle delayed almost 5 hours. Weather was clear. Still not clear why this happened and no one explained.,6.1,no
+TKT-1086,check-in problem,"Checked in, printed boarding pass, but the barcode wouldn't scan at security. Had to get a replacement and almost missed my connection.",2.4,no
+TKT-1087,cancellation,Got a text cancellation at midnight. I was already at the airport hotel. The rebooking options are all terrible.,17.6,no
+TKT-1088,lost baggage,Arrived in Miami but my stroller never came out. Traveling with a toddler and this is a nightmare. Please help urgently.,47.5,no
+TKT-1089,lost baggage,Both of my checked bags are missing after my connecting flight through Chicago. The agent at the desk just shrugged and gave me a form.,49.9,no
+TKT-1090,lost baggage,Still waiting for my bag from my flight 6 days ago. The tracking system just says 'in transit.' I've been buying clothes every day.,47.8,yes
+TKT-1091,seat issue,Assigned exit row but at the gate they gave it to someone else. I'm 6'4 and specifically need that extra legroom.,3.0,no
+TKT-1092,refund request,Used travel credit that was about to expire. Flight was then cancelled by airline. Now being told original credit can't be refunded.,50.6,no
+TKT-1093,cancellation,Third cancellation this month on this route. I've lost faith completely. I want a full refund for all future bookings I have.,53.0,yes
+TKT-1094,lost baggage,Bag came back with broken zipper and my laptop inside is now damaged. I want to know what you're going to do about this.,118.3,yes
+TKT-1095,flight delay,Missed an important client meeting because of a 3hr delay that wasn't weather-related. I need a written explanation for my employer.,5.4,yes
+TKT-1096,check-in problem,Bag drop queue took over an hour. Only 2 agents working for a full 737. Completely understaffed.,0.5,no
+TKT-1097,cancellation,Got a text cancellation at midnight. I was already at the airport hotel. The rebooking options are all terrible.,27.5,yes
+TKT-1098,check-in problem,Check-in opened 24 hours before my international flight but the website gave error 500 the entire time.,3.9,yes
+TKT-1099,app issue,Boarding pass won't load in the app. I'm at the airport right now and the wifi here is bad. This is really stressful.,5.9,yes
