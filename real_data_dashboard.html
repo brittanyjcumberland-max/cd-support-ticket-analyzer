@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airline Support Ticket Analyzer — Real Data Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:       #0f1117;
+    --surface:  #1a1d27;
+    --surface2: #22263a;
+    --border:   #2e3350;
+    --accent:   #5b8cff;
+    --accent2:  #7c5fff;
+    --green:    #34d399;
+    --yellow:   #fbbf24;
+    --red:      #f87171;
+    --text:     #e2e8f0;
+    --muted:    #8892a4;
+    --card-r:   14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #1a1d27 0%, #12182b 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+  }
+  header h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+  header h1 span { color: var(--accent); }
+  header p { color: var(--muted); font-size: 0.875rem; margin-top: 4px; }
+  .header-meta {
+    display: flex; gap: 24px; margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .header-meta span {
+    font-size: 0.8rem; color: var(--muted);
+    background: var(--surface2); border: 1px solid var(--border);
+    padding: 4px 12px; border-radius: 20px;
+  }
+  .header-meta span b { color: var(--text); }
+
+  /* ── Layout ── */
+  .main { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+  /* ── Section headings ── */
+  .section-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 16px; margin-top: 40px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* ── KPI Cards ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-r);
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent-color, var(--accent));
+    border-radius: var(--card-r) var(--card-r) 0 0;
+  }
+  .kpi-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .kpi-value { font-size: 2.2rem; font-weight: 700; line-height: 1; }
+  .kpi-sub   { font-size: 0.78rem; color: var(--muted); margin-top: 6px; }
+
+  /* ── Charts grid ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-r);
+    padding: 24px;
+  }
+  .chart-card h3 {
+    font-size: 0.95rem; font-weight: 600;
+    margin-bottom: 20px; color: var(--text);
+  }
+  .chart-card h3 small { font-weight: 400; color: var(--muted); font-size: 0.8rem; margin-left: 8px; }
+
+  /* ── Resolution time chart (full width) ── */
+  .chart-full { grid-column: 1 / -1; }
+
+  /* ── Deflection / Savings Table ── */
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--card-r);
+    overflow: hidden;
+  }
+  .table-wrap table {
+    width: 100%; border-collapse: collapse; font-size: 0.87rem;
+  }
+  .table-wrap thead th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .table-wrap tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  .table-wrap tbody tr:last-child { border-bottom: none; }
+  .table-wrap tbody tr:hover { background: var(--surface2); }
+  .table-wrap tbody td { padding: 13px 16px; vertical-align: middle; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+  }
+  .badge-high   { background: rgba(52,211,153,.15); color: var(--green); border: 1px solid rgba(52,211,153,.3); }
+  .badge-medium { background: rgba(251,191,36,.15);  color: var(--yellow); border: 1px solid rgba(251,191,36,.3); }
+  .badge-low    { background: rgba(248,113,113,.15); color: var(--red);    border: 1px solid rgba(248,113,113,.3); }
+
+  .bar-mini {
+    height: 6px; border-radius: 3px;
+    background: var(--border); width: 120px; overflow: hidden; display: inline-block;
+    vertical-align: middle; margin-left: 8px;
+  }
+  .bar-mini-fill { height: 100%; border-radius: 3px; }
+
+  .savings-num { color: var(--green); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* ── Sentiment stacked bar ── */
+  .sentiment-bar-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+  .sentiment-bar-row .cat-name { width: 140px; font-size: 0.82rem; color: var(--muted); flex-shrink: 0; }
+  .sentiment-stacked { flex: 1; height: 18px; border-radius: 4px; overflow: hidden; display: flex; }
+  .seg-vn { background: #f87171; }
+  .seg-n  { background: #fbbf24; }
+  .seg-nt { background: #8892a4; }
+
+  /* ── Notice ── */
+  .notice {
+    background: rgba(91,140,255,.08);
+    border: 1px solid rgba(91,140,255,.25);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0;
+  }
+  .notice strong { color: var(--accent); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 32px 40px;
+    font-size: 0.78rem; color: var(--muted);
+    border-top: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  @media (max-width: 768px) {
+    .main { padding: 20px 16px; }
+    header { padding: 20px 16px; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .chart-full { grid-column: auto; }
+    .kpi-value { font-size: 1.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Airline Support Ticket <span>Analyzer</span></h1>
+  <p>Real customer support data &mdash; complaint analysis, sentiment mapping, and AI deflection opportunity scoring</p>
+  <div class="header-meta">
+    <span>Source: <b>tickets.csv</b></span>
+    <span>Tickets: <b>100</b></span>
+    <span>Categories: <b>7</b></span>
+    <span>Cost per ticket: <b>$15</b></span>
+    <span>Analysis date: <b>April 2026</b></span>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Notice -->
+  <div class="notice" style="margin-bottom:0; margin-top: 8px;">
+    <strong>Dataset note:</strong> The source file (<code>tickets.csv</code>) contains 100 real airline support tickets with columns for category, description, resolution time, and first-contact resolution. Airline-level attribution is not present in this dataset; analysis is segmented by complaint category. Sentiment was derived from description text using keyword scoring.
+  </div>
+
+  <!-- KPIs -->
+  <div class="section-title">Key Metrics</div>
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--accent-color: #5b8cff">
+      <div class="kpi-label">Total Tickets</div>
+      <div class="kpi-value">100</div>
+      <div class="kpi-sub">Across 7 complaint categories</div>
+    </div>
+    <div class="kpi-card" style="--accent-color: #f87171">
+      <div class="kpi-label">Negative Sentiment</div>
+      <div class="kpi-value">66<span style="font-size:1.1rem;color:var(--muted)">%</span></div>
+      <div class="kpi-sub">33 very negative · 33 negative</div>
+    </div>
+    <div class="kpi-card" style="--accent-color: #34d399">
+      <div class="kpi-label">AI-Deflectable Tickets</div>
+      <div class="kpi-value">33</div>
+      <div class="kpi-sub">High + medium categories</div>
+    </div>
+    <div class="kpi-card" style="--accent-color: #34d399">
+      <div class="kpi-label">Est. Cost Savings</div>
+      <div class="kpi-value">$495</div>
+      <div class="kpi-sub">At $15/ticket (H+M deflection)</div>
+    </div>
+    <div class="kpi-card" style="--accent-color: #fbbf24">
+      <div class="kpi-label">First-Contact Resolution</div>
+      <div class="kpi-value">47<span style="font-size:1.1rem;color:var(--muted)">%</span></div>
+      <div class="kpi-sub">53 required follow-up</div>
+    </div>
+    <div class="kpi-card" style="--accent-color: #f87171">
+      <div class="kpi-label">Worst Avg Resolution</div>
+      <div class="kpi-value" style="font-size:1.5rem">380h</div>
+      <div class="kpi-sub">Refund requests (avg 379.6 hrs)</div>
+    </div>
+  </div>
+
+  <!-- Charts row 1 -->
+  <div class="section-title">Volume &amp; Sentiment</div>
+  <div class="charts-grid">
+
+    <!-- Bar: ticket volume by category -->
+    <div class="chart-card">
+      <h3>Ticket Volume by Category <small>n=100</small></h3>
+      <canvas id="volChart" height="240"></canvas>
+    </div>
+
+    <!-- Donut: overall sentiment -->
+    <div class="chart-card">
+      <h3>Overall Sentiment Distribution</h3>
+      <canvas id="sentimentDonut" height="240"></canvas>
+    </div>
+
+  </div>
+
+  <!-- Sentiment by category stacked bars -->
+  <div class="section-title">Sentiment by Category</div>
+  <div class="chart-card">
+    <h3>Sentiment Breakdown per Category <small>keyword-scored from description text</small></h3>
+    <canvas id="sentStackedChart" height="160"></canvas>
+  </div>
+
+  <!-- Resolution time -->
+  <div class="section-title">Resolution Performance</div>
+  <div class="charts-grid">
+    <div class="chart-card chart-full">
+      <h3>Average Resolution Time by Category <small>hours</small></h3>
+      <canvas id="resTimeChart" height="130"></canvas>
+    </div>
+  </div>
+
+  <!-- Deflection + Savings Table -->
+  <div class="section-title">AI Deflection Opportunity &amp; Estimated Cost Savings</div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Tickets</th>
+          <th>AI Deflection Score</th>
+          <th>Est. Deflectable</th>
+          <th>Deflection %</th>
+          <th>Est. Savings @ $15</th>
+          <th>Avg Resolution</th>
+          <th>FCR Rate</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody id="deflectionTableBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Savings chart -->
+  <div class="section-title">Cost Savings Potential</div>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3>Estimated Savings per Category <small>High &amp; Medium deflection only</small></h3>
+      <canvas id="savingsChart" height="240"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Deflectable vs. Requires Human <small>% of total tickets</small></h3>
+      <canvas id="deflDonut" height="240"></canvas>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Built with real customer support data &mdash; tickets.csv &middot; 100 tickets &middot; 7 categories &middot; Airline Support Ticket Analyzer
+</footer>
+
+<script>
+// ── Raw data ──────────────────────────────────────────────────────────────────
+const data = [
+  { category: 'flight delay',     count: 29, deflScore: 'Medium', deflPct: 50, deflTickets: 14, savings: 210, avgRes: 11.5, fcr: 59, reason: 'Real-time status updates automatable; compensation decisions need human review', sentiments: { vn: 8, n: 9, nt: 12 } },
+  { category: 'lost baggage',     count: 18, deflScore: 'Low',    deflPct: 15, deflTickets:  3, savings:   0, avgRes: 80.8, fcr: 28, reason: 'Requires ops coordination, tracking system access, and physical follow-up', sentiments: { vn: 5, n: 10, nt: 3 } },
+  { category: 'seat issue',       count: 15, deflScore: 'Medium', deflPct: 45, deflTickets:  7, savings: 105, avgRes:  7.1, fcr: 40, reason: 'Seat map lookup and reassignment bots viable; upgrades and complaints need human', sentiments: { vn: 7, n: 0, nt: 8 } },
+  { category: 'refund request',   count: 13, deflScore: 'Low',    deflPct: 25, deflTickets:  3, savings:   0, avgRes: 379.6, fcr: 54, reason: 'Policy FAQ deflectable; actual refund approval and disputes require human', sentiments: { vn: 8, n: 5, nt: 0 } },
+  { category: 'check-in problem', count:  9, deflScore: 'High',   deflPct: 70, deflTickets:  6, savings:  90, avgRes:  3.3, fcr: 67, reason: 'Procedural guidance and boarding pass workflows are fully scriptable by AI', sentiments: { vn: 0, n: 1, nt: 8 } },
+  { category: 'app issue',        count:  8, deflScore: 'High',   deflPct: 75, deflTickets:  6, savings:  90, avgRes:  3.4, fcr: 50, reason: 'Technical FAQ, crash troubleshooting, and status checks are ideal for AI', sentiments: { vn: 0, n: 5, nt: 3 } },
+  { category: 'cancellation',     count:  8, deflScore: 'Low',    deflPct: 20, deflTickets:  2, savings:   0, avgRes: 36.0, fcr: 25, reason: 'High emotional stakes and rebooking complexity make human handling preferable', sentiments: { vn: 5, n: 3, nt: 0 } },
+];
+
+const COLORS = {
+  accent:  '#5b8cff',
+  accent2: '#7c5fff',
+  green:   '#34d399',
+  yellow:  '#fbbf24',
+  red:     '#f87171',
+  muted:   '#8892a4',
+  surface2:'#22263a',
+};
+
+const catColors = [
+  '#5b8cff','#f87171','#fbbf24','#34d399','#a78bfa','#fb923c','#38bdf8'
+];
+
+Chart.defaults.color = '#8892a4';
+Chart.defaults.borderColor = '#2e3350';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+// ── 1. Volume bar chart ───────────────────────────────────────────────────────
+new Chart(document.getElementById('volChart'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.category),
+    datasets: [{
+      label: 'Tickets',
+      data: data.map(d => d.count),
+      backgroundColor: catColors,
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw} tickets (${((ctx.raw/100)*100).toFixed(0)}% of total)`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: {
+        beginAtZero: true,
+        ticks: { stepSize: 5 },
+        grid: { color: '#2e3350' }
+      }
+    }
+  }
+});
+
+// ── 2. Sentiment donut ────────────────────────────────────────────────────────
+new Chart(document.getElementById('sentimentDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Very Negative', 'Negative', 'Neutral'],
+    datasets: [{
+      data: [33, 33, 34],
+      backgroundColor: [COLORS.red, COLORS.yellow, COLORS.muted],
+      borderWidth: 0,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '62%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { padding: 16, font: { size: 12 }, boxWidth: 12, borderRadius: 3 }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw} tickets (${ctx.raw}%)`
+        }
+      }
+    }
+  }
+});
+
+// ── 3. Stacked sentiment by category ─────────────────────────────────────────
+new Chart(document.getElementById('sentStackedChart'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.category),
+    datasets: [
+      {
+        label: 'Very Negative',
+        data: data.map(d => d.sentiments.vn),
+        backgroundColor: COLORS.red,
+        borderRadius: 0,
+      },
+      {
+        label: 'Negative',
+        data: data.map(d => d.sentiments.n),
+        backgroundColor: COLORS.yellow,
+      },
+      {
+        label: 'Neutral',
+        data: data.map(d => d.sentiments.nt),
+        backgroundColor: COLORS.muted,
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: { padding: 16, font: { size: 12 }, boxWidth: 12 }
+      }
+    },
+    scales: {
+      x: { stacked: true, grid: { display: false } },
+      y: { stacked: true, grid: { color: '#2e3350' }, ticks: { stepSize: 5 } }
+    }
+  }
+});
+
+// ── 4. Resolution time horizontal bar ────────────────────────────────────────
+new Chart(document.getElementById('resTimeChart'), {
+  type: 'bar',
+  data: {
+    labels: data.map(d => d.category),
+    datasets: [{
+      label: 'Avg Resolution (hours)',
+      data: data.map(d => d.avgRes),
+      backgroundColor: data.map(d =>
+        d.avgRes > 100 ? COLORS.red : d.avgRes > 20 ? COLORS.yellow : COLORS.green
+      ),
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw} hours avg resolution`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { color: '#2e3350' }, ticks: { callback: v => v + 'h' } },
+      y: { grid: { display: false } }
+    }
+  }
+});
+
+// ── 5. Savings bar chart ──────────────────────────────────────────────────────
+const highMedData = data.filter(d => d.deflScore !== 'Low');
+new Chart(document.getElementById('savingsChart'), {
+  type: 'bar',
+  data: {
+    labels: highMedData.map(d => d.category),
+    datasets: [{
+      label: 'Estimated Savings ($)',
+      data: highMedData.map(d => d.savings),
+      backgroundColor: highMedData.map(d =>
+        d.deflScore === 'High' ? COLORS.green : COLORS.yellow
+      ),
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` $${ctx.raw} estimated savings`
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        beginAtZero: true,
+        grid: { color: '#2e3350' },
+        ticks: { callback: v => '$' + v }
+      }
+    }
+  }
+});
+
+// ── 6. Deflectable vs human donut ─────────────────────────────────────────────
+new Chart(document.getElementById('deflDonut'), {
+  type: 'doughnut',
+  data: {
+    labels: ['AI-Deflectable (H+M)', 'Requires Human'],
+    datasets: [{
+      data: [33, 67],
+      backgroundColor: [COLORS.green, COLORS.surface2],
+      borderColor: ['#34d399', '#2e3350'],
+      borderWidth: 1,
+      hoverOffset: 8,
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '62%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { padding: 16, font: { size: 12 }, boxWidth: 12 }
+      },
+      tooltip: {
+        callbacks: {
+          label: ctx => ` ${ctx.raw} tickets (${ctx.raw}%)`
+        }
+      }
+    }
+  }
+});
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+const tbody = document.getElementById('deflectionTableBody');
+data.forEach(d => {
+  const badgeClass = d.deflScore === 'High' ? 'badge-high' : d.deflScore === 'Medium' ? 'badge-medium' : 'badge-low';
+  const dot = d.deflScore === 'High' ? '●' : d.deflScore === 'Medium' ? '◐' : '○';
+  const fillColor = d.deflScore === 'High' ? '#34d399' : d.deflScore === 'Medium' ? '#fbbf24' : '#f87171';
+  const savingsHtml = (d.deflScore === 'High' || d.deflScore === 'Medium')
+    ? `<span class="savings-num">$${d.savings}</span>`
+    : `<span style="color:var(--muted)">—</span>`;
+  const resColor = d.avgRes > 100 ? COLORS.red : d.avgRes > 20 ? COLORS.yellow : COLORS.green;
+
+  tbody.innerHTML += `
+    <tr>
+      <td style="font-weight:600">${d.category}</td>
+      <td>${d.count}</td>
+      <td><span class="badge ${badgeClass}">${dot} ${d.deflScore}</span></td>
+      <td>${d.deflTickets} tickets</td>
+      <td>
+        ${d.deflPct}%
+        <span class="bar-mini">
+          <span class="bar-mini-fill" style="width:${d.deflPct}%;background:${fillColor}"></span>
+        </span>
+      </td>
+      <td>${savingsHtml}</td>
+      <td style="color:${resColor};font-weight:600;font-variant-numeric:tabular-nums">${d.avgRes}h</td>
+      <td>
+        ${d.fcr}%
+        <span class="bar-mini">
+          <span class="bar-mini-fill" style="width:${d.fcr}%;background:${COLORS.accent}"></span>
+        </span>
+      </td>
+      <td style="color:var(--muted);font-size:0.8rem;max-width:240px">${d.reason}</td>
+    </tr>`;
+});
+</script>
+</body>
+</html>
